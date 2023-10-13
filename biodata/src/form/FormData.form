@@ -217,6 +217,9 @@
       </AuxValues>
     </Component>
     <Component class="javax.swing.JTextField" name="txt_cari">
+      <Events>
+        <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txt_cariKeyPressed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

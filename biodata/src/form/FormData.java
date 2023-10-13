@@ -37,6 +37,41 @@ public class FormData extends javax.swing.JFrame {
         txt_nik.setEditable(true);
     }
     
+    private void CariData(){
+         try{
+            st = cn.createStatement();
+            rs = st.executeQuery("SELECT * FROM biodata WHERE "+cmb_cari.getSelectedItem().toString()+" LIKE '%"+txt_cari.getText()+"%'");
+            
+            DefaultTableModel model = new DefaultTableModel();
+            model.addColumn("No.");
+            model.addColumn("NIK");
+            model.addColumn("Nama");
+            model.addColumn("Telepon");
+            model.addColumn("Alamat");
+            
+            int no = 1;
+            
+            model.getDataVector().removeAllElements();
+            model.fireTableDataChanged();
+            model.setRowCount(0);
+             
+            while(rs.next()){
+                Object[] data = {
+                    no ++,
+                    rs.getString("nik"),
+                    rs.getString("nama"),
+                    rs.getString("telepon"),
+                    rs.getString("alamat")
+                };
+                model.addRow(data);
+                data_tabel.setModel(model);
+            }
+            
+        }catch (Exception e){
+             JOptionPane.showMessageDialog(null, "Data tidak ada");
+        }   
+    }
+    
     private void TampilData(){
         try{
             st = cn.createStatement();
@@ -150,6 +185,12 @@ public class FormData extends javax.swing.JFrame {
         jLabel5.setText("Cari Data");
 
         cmb_cari.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "nik", "nama", "telepon", "alamat" }));
+
+        txt_cari.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txt_cariKeyPressed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -303,6 +344,11 @@ public class FormData extends javax.swing.JFrame {
         // TODO add your handling code here:
         Bersih();
     }//GEN-LAST:event_btn_batalActionPerformed
+
+    private void txt_cariKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_cariKeyPressed
+        // TODO add your handling code here:
+        CariData();
+    }//GEN-LAST:event_txt_cariKeyPressed
 
     /**
      * @param args the command line arguments
