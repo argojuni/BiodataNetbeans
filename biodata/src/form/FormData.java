@@ -9,6 +9,8 @@ package form;
  * @author JUNIARGO
  */
 import java.sql.*;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 public class FormData extends javax.swing.JFrame {
 
@@ -17,9 +19,54 @@ public class FormData extends javax.swing.JFrame {
      */
     public Statement st;
     public ResultSet rs;
+//    DefaultTableModel model;
     Connection cn = koneksi.KoneksiDatabase.BukaKoneksi();
+    
     public FormData() {
         initComponents();
+        TampilData();
+    }
+    
+    private void Bersih(){
+        txt_nik.setText("");
+        txt_nama.setText("");
+        txt_telepon.setText("");
+        txt_alamat.setText("");
+    }
+    
+    private void TampilData(){
+        try{
+            st = cn.createStatement();
+            rs = st.executeQuery("SELECT * FROM biodata");
+            
+            DefaultTableModel model = new DefaultTableModel();
+            model.addColumn("No.");
+            model.addColumn("NIK");
+            model.addColumn("Nama");
+            model.addColumn("Telepon");
+            model.addColumn("Alamat");
+            
+            int no = 1;
+            
+            model.getDataVector().removeAllElements();
+            model.fireTableDataChanged();
+            model.setRowCount(0);
+             
+            while(rs.next()){
+                Object[] data = {
+                    no ++,
+                    rs.getString("nik"),
+                    rs.getString("nama"),
+                    rs.getString("telepon"),
+                    rs.getString("alamat")
+                };
+                model.addRow(data);
+                data_tabel.setModel(model);
+            }
+            
+        }catch (Exception e){
+            
+        }
     }
 
     /**
@@ -59,6 +106,11 @@ public class FormData extends javax.swing.JFrame {
         jLabel4.setText("Alamat");
 
         btn_simpan.setText("Simpan");
+        btn_simpan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_simpanActionPerformed(evt);
+            }
+        });
 
         btn_hapus.setText("Hapus");
 
@@ -75,6 +127,11 @@ public class FormData extends javax.swing.JFrame {
                 "NIK", "Nama Lengkap", "Telepon", "Alamat"
             }
         ));
+        data_tabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                data_tabelMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(data_tabel);
 
         jLabel5.setText("Cari Data");
@@ -161,6 +218,46 @@ public class FormData extends javax.swing.JFrame {
         setSize(new java.awt.Dimension(416, 426));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btn_simpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_simpanActionPerformed
+        // TODO add your handling code here:
+        try{
+            st = cn.createStatement();
+            if(txt_nik.getText().equals("")||txt_nama.getText().equals("")||txt_telepon.getText().equals("")||txt_alamat.getText().equals("")){
+                JOptionPane.showMessageDialog(null,"Data tidak boleh kosong","Validasi data", JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+            if(btn_simpan.getText() == "Simpan"){
+                String cek = "SELECT * FROM biodata WHERE nik = '"+txt_nik.getText()+"'";
+                rs = st.executeQuery(cek);
+                if(rs.next()){
+                    JOptionPane.showMessageDialog(null, "Ups... nik ini sudah ada");
+                }else{
+                    String sql = "INSERT INTO biodata VALUES ('"+txt_nik.getText()+"','"+txt_nama.getText()+"','"+txt_telepon.getText()+"','"+txt_alamat.getText()+"')";
+                    st.executeUpdate(sql);
+                    JOptionPane.showMessageDialog(null, "Data Berhasil Disimpan"); 
+                    Bersih();
+                }
+            }else{
+                
+            }
+        }catch(Exception e){
+            
+        }
+    }//GEN-LAST:event_btn_simpanActionPerformed
+
+    private void data_tabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_data_tabelMouseClicked
+        // TODO add your handling code here:
+        int i = data_tabel.getSelectedRow();
+          
+//          if(i>-1){
+//              txt_nik.setText(model.getValueAt(i,0).toString());
+//              txt_nama.setText(model.getValueAt(i, 1).toString());
+//              txt_telepon.setText(model.getValueAt(i, 2).toString());
+//              txt_alamat.setText(model.getValueAt(i, 3).toString());
+//
+//          }
+    }//GEN-LAST:event_data_tabelMouseClicked
 
     /**
      * @param args the command line arguments
