@@ -236,6 +236,7 @@ public class FormData extends javax.swing.JFrame {
                     String sql = "INSERT INTO biodata VALUES ('"+txt_nik.getText()+"','"+txt_nama.getText()+"','"+txt_telepon.getText()+"','"+txt_alamat.getText()+"')";
                     st.executeUpdate(sql);
                     JOptionPane.showMessageDialog(null, "Data Berhasil Disimpan"); 
+                    TampilData();
                     Bersih();
                 }
             }else{
@@ -248,15 +249,11 @@ public class FormData extends javax.swing.JFrame {
 
     private void data_tabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_data_tabelMouseClicked
         // TODO add your handling code here:
-        int i = data_tabel.getSelectedRow();
-          
-//          if(i>-1){
-//              txt_nik.setText(model.getValueAt(i,0).toString());
-//              txt_nama.setText(model.getValueAt(i, 1).toString());
-//              txt_telepon.setText(model.getValueAt(i, 2).toString());
-//              txt_alamat.setText(model.getValueAt(i, 3).toString());
-//
-//          }
+         txt_nik.setText(data_tabel.getValueAt(data_tabel.getSelectedRow(),1).toString());
+         txt_nama.setText(data_tabel.getValueAt(data_tabel.getSelectedRow(), 2).toString());
+        txt_telepon.setText(data_tabel.getValueAt(data_tabel.getSelectedRow(), 3).toString());
+        txt_alamat.setText(data_tabel.getValueAt(data_tabel.getSelectedRow(), 4).toString());
+
     }//GEN-LAST:event_data_tabelMouseClicked
 
     /**
