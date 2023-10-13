@@ -32,6 +32,9 @@ public class FormData extends javax.swing.JFrame {
         txt_nama.setText("");
         txt_telepon.setText("");
         txt_alamat.setText("");
+        
+        btn_simpan.setText("Simpan");
+        txt_nik.setEditable(true);
     }
     
     private void TampilData(){
@@ -113,8 +116,18 @@ public class FormData extends javax.swing.JFrame {
         });
 
         btn_hapus.setText("Hapus");
+        btn_hapus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_hapusActionPerformed(evt);
+            }
+        });
 
         btn_batal.setText("Batal");
+        btn_batal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_batalActionPerformed(evt);
+            }
+        });
 
         data_tabel.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -233,17 +246,24 @@ public class FormData extends javax.swing.JFrame {
                 if(rs.next()){
                     JOptionPane.showMessageDialog(null, "Ups... nik ini sudah ada");
                 }else{
-                    String sql = "INSERT INTO biodata VALUES ('"+txt_nik.getText()+"','"+txt_nama.getText()+"','"+txt_telepon.getText()+"','"+txt_alamat.getText()+"')";
+                    String sql = "INSERT INTO biodata VALUES ('" + txt_nik.getText() + "','" + txt_nama.getText() + "','" + txt_telepon.getText() + "','" + txt_alamat.getText() + "')";
                     st.executeUpdate(sql);
                     JOptionPane.showMessageDialog(null, "Data Berhasil Disimpan"); 
                     TampilData();
                     Bersih();
                 }
             }else{
-                
+                 String update = "UPDATE  biodata SET nama = '"+txt_nama.getText()+
+                            "',telepon = '"+txt_telepon.getText()+
+                            "',alamat = '"+txt_alamat.getText()+
+                            "'WHERE nik = '"+txt_nik.getText()+"'";
+                    st.executeUpdate(update);
+                    JOptionPane.showMessageDialog(null, "Data Berhasil Di Ubah"); 
+                    TampilData();
+                    Bersih();
             }
         }catch(Exception e){
-            
+            JOptionPane.showMessageDialog(null, e);
         }
     }//GEN-LAST:event_btn_simpanActionPerformed
 
@@ -253,8 +273,36 @@ public class FormData extends javax.swing.JFrame {
          txt_nama.setText(data_tabel.getValueAt(data_tabel.getSelectedRow(), 2).toString());
         txt_telepon.setText(data_tabel.getValueAt(data_tabel.getSelectedRow(), 3).toString());
         txt_alamat.setText(data_tabel.getValueAt(data_tabel.getSelectedRow(), 4).toString());
-
+        
+        txt_nik.setEditable(false);
+        btn_simpan.setText("Ubah");
     }//GEN-LAST:event_data_tabelMouseClicked
+
+    private void btn_hapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_hapusActionPerformed
+        // TODO add your handling code here:
+        if(txt_nik.getText().equals("")){
+            JOptionPane.showMessageDialog(this,"Silahkan pilih data yang akan dihapus !" );
+        }else{
+            int jawab = JOptionPane.showConfirmDialog(null, "Data ini akan dihapus, lanjutkan?","Konfirmasi",JOptionPane.YES_NO_OPTION);
+            if(jawab == 0){
+                try{
+                    st = cn.createStatement();
+                    String sql = "DELETE FROM biodata WHERE NIK = '"+txt_nik.getText() + "'";
+                    st.executeUpdate(sql);
+                    JOptionPane.showMessageDialog(null, "Data Berhasil Di Hapus");
+                    TampilData();
+                    Bersih();
+                }catch(Exception e){
+                    JOptionPane.showMessageDialog(null, e);
+                }
+            }
+        }
+    }//GEN-LAST:event_btn_hapusActionPerformed
+
+    private void btn_batalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_batalActionPerformed
+        // TODO add your handling code here:
+        Bersih();
+    }//GEN-LAST:event_btn_batalActionPerformed
 
     /**
      * @param args the command line arguments
