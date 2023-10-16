@@ -143,6 +143,12 @@ public class FormData extends javax.swing.JFrame {
 
         jLabel4.setText("Alamat");
 
+        txt_nik.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txt_nikActionPerformed(evt);
+            }
+        });
+
         btn_simpan.setText("Simpan");
         btn_simpan.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -349,6 +355,10 @@ public class FormData extends javax.swing.JFrame {
         // TODO add your handling code here:
         CariData();
     }//GEN-LAST:event_txt_cariKeyPressed
+
+    private void txt_nikActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_nikActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txt_nikActionPerformed
 
     /**
      * @param args the command line arguments
